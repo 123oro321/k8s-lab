@@ -1,0 +1,34 @@
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+server:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+  httproute:
+    enabled: true
+    parentRefs:
+      - name: argocd-gateway
+        sectionName: https-argocd
+
+repoServer:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+
+applicationSet:
+  replicas: 2
+
+# global:
+#   domain: Populates via private helm-values.yaml
+
+configs:
+  params:
+    server.insecure: true
+  cm:
+    admin.enabled: false
+    # oidc.config: Populates via private helm-values.yaml
+  # rbac:  Populates via private helm-values.yaml
