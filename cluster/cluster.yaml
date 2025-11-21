@@ -1,0 +1,20 @@
+kind: Cluster
+name: talos-default
+kubernetes:
+  version: v1.34.2
+talos:
+  version: v1.11.5
+patches:
+  - name: cluster-preparation
+    file: patch/cluster.yaml
+  - name: cluster-preparation-private
+    file: private/cluster.yaml
+---
+kind: ControlPlane
+machines: ${CONTROLPLANE_MACHINES}
+patches:
+  - name: cluster-patch
+    file: patch/controlplane.yaml
+---
+kind: Workers
+machines: ${WORKER_MACHINES}

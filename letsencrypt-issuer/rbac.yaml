@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cert-manager-acme-dns01-route53
+  namespace: cert-manager
+  # annotations:
+  #   eks.amazonaws.com/role-arn: arn:aws:iam::012345678910:role/RoleForDNS01Challenge # IAM Role annotation added via kustomize patch)
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cert-manager-acme-dns01-route53-tokenrequest
+  namespace: cert-manager
+rules:
+  - apiGroups: ['']
+    resources: ['serviceaccounts/token']
+    resourceNames: ['cert-manager-acme-dns01-route53']
+    verbs: ['create']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cert-manager-acme-dns01-route53-tokenrequest
+  namespace: cert-manager
+subjects:
+  - kind: ServiceAccount
+    name: cert-manager
+    namespace: cert-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cert-manager-acme-dns01-route53-tokenrequest
